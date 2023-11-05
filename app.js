@@ -11,5 +11,5 @@ app.use(express.json());
 app.use("/api", productsRouter);
 
 app.listen(port, () => {
-  console.log(`listening on port${port}`);
+  console.log(`listening on port${port}!!!`);
 });
