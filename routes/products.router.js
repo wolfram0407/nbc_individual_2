@@ -74,7 +74,7 @@ router.get('/product/:productId', async (req, res) => {
 });
 
 // 입력 값 없는 경우
-router.put('/products/:productId', async (req, res) => {
+router.put('/products/', async (req, res) => {
   return res
     .status(400)
     .json({ errorMessage: '데이터 형식이 올바르지 않습니다.' });
@@ -82,10 +82,10 @@ router.put('/products/:productId', async (req, res) => {
 
 //상품 정보 수정
 router.put('/products/:productId', async (req, res) => {
-  const { title, content, password, status } = req.body;
+  const { title, content, password, status, author } = req.body;
   const id = req.params.productId;
 
-  if (!title && !content && !status && !password) {
+  if ((!title && !content && !status) || !password) {
     return res
       .status(400)
       .send({ message: '데이터 형식이 올바르지 않습니다.' });
@@ -93,6 +93,7 @@ router.put('/products/:productId', async (req, res) => {
 
   try {
     const goodsOne = await Product.findOne({ _id: id });
+
     if (password !== goodsOne.password) {
       return res
         .status(401)
@@ -104,6 +105,7 @@ router.put('/products/:productId', async (req, res) => {
       content: content ? content : goodsOne.content,
       password: password ? password : goodsOne.password,
       status: status ? status : goodsOne.status,
+      author: author ? author : goodsOne.author,
     };
 
     await Product.updateOne({ _id: id }, { $set: putOne });
